@@ -1,8 +1,5 @@
 import sys
-
 sys.stdin = open('input.txt', 'r')
-
-
 
 # 구간합
 # T = int(input())
@@ -527,26 +524,165 @@ sys.stdin = open('input.txt', 'r')
 #     print(f"#{N} {j}")
 
 # 스도쿠 검증
-def is_sdoku(arr, N):
-    for _ in range(2): # 행/열 두 번 탐색
-        for i in range(0, N, 1):
-            counts = [0] * N # 0~9까지 카운트 저장
-            for j in range(N):
-                if counts[arr[i][j]-1] != 0: # 이전에 카운트된 숫자가 있다면
-                    return 0 # 중복이 있는 것 -> 스도쿠X(0)
-                else:
-                    counts[arr[i][j]-1] = 1 # 해당 원소에 카운트 + 1
-        arr = list(map(list, zip(*arr))) # 행렬 전치 > 열방향을 행으로 바꿔 탐색
+# def is_sdoku(arr, N):
+#     # 행/열 두 번 탐색
+#     for _ in range(2):
+#         for i in range(N):
+#             counts = [0] * N # 0~9까지 카운트 저장
+#             for j in range(N):
+#                 if counts[arr[i][j]-1] != 0: # 이전에 카운트된 숫자가 있다면
+#                     return 0 # 중복이 있는 것 -> 스도쿠 X(return 0)
+#                 else:
+#                     counts[arr[i][j]-1] = 1 # 해당 원소에 카운트 + 1
+#         arr = list(map(list, zip(*arr))) # 행렬 전치 > 열방향을 행으로 바꿔 탐색
+# 
+#     # 3*3 박스 탐색
+#     for i in range(0, N-3, 3):
+#         for j in range(0, N-3, 3):
+#             counts = [0] * N
+#             for k in range(3):
+#                 for l in range(3):
+#                     if counts[arr[i+k][j+l]-1] != 0:
+#                         return 0
+#                     else:
+#                         counts[arr[i+k][j+l]-1] = 1
+# 
+#     return 1 # 모든 조건을 통과한 경우 -> 스도쿠 O(return 1)
+# 
+# T = int(input())
+# for t in range(1, T+1):
+#     N = 9
+#     arr = [list(map(int, input().split())) for _ in range(N)] # 9 X 9 스도쿠 배열
+#     result = is_sdoku(arr, N)
+#     print(f"#{t} {result}")
 
-    for k in range(0, N, 3):
-        for i in range(k, k+3):
-            for j in range(k, k+3):
-                arr[i][j]
-    return 1 # 모든 조건을 통과한 경우 -> 스도쿠O(1)
+# GNS
+# T = int(input())
+# for _ in range(T):
+#     t, N = input().split()
+#     arr = list(input().split())
+#     condition = ["ZRO", "ONE", "TWO", "THR", "FOR", "FIV", "SIX", "SVN", "EGT", "NIN"]
+#     counts = [0] * len(condition)
+# 
+#     for i in range(len(condition)):
+#         for j in range(len(arr)):
+#             if condition[i] == arr[j]:
+#                 counts[i] += 1
+# 
+#     print(t)
+#     for i in range(len(condition)):
+#         if counts[i]:
+#             print((condition[i]+" ")*counts[i], end="")
+#     print(end="\n")
 
-T = int(input())
-for t in range(1, T+1):
-    N = 9
-    arr = [list(map(int, input().split())) for _ in range(N)] # 9 X 9 스도쿠 배열
-    result = is_sdoku(arr, N)
-    print(f"#{t} {result}")
+# String
+# def compare_string(str, N, target, M, i):
+#     for j in range(M):
+#         if str[i+j] != target[j]:
+#             return 0
+#     return 1
+#
+# T = 10
+# for _ in range(T):
+#     t = int(input())
+#     target = input() # 찾을 문자
+#     str = input() # 전체 문자
+#     M = len(target) # 찾을 문자 길이
+#     N = len(str) # 전체 문자 길이
+#
+#     cnt = 0
+#     for i in range(0, N-M+1): # 원본 문자열
+#         if compare_string(str, N, target, M, i):
+#             cnt += 1
+#
+#     print(f"#{t} {cnt}")
+
+# ladder2
+# import copy
+# T = 10
+# for _ in range(T):
+#     t = int(input())
+#     N = 100
+#     arr = [list(map(int, input().split())) for _ in range(N)]
+#     s_j = [idx for idx in range(N) if arr[0][idx] == 1] # 시작 위치 찾기(배열의 첫 행에서 원소값이 1인 모든 인덱스)
+#     min_dist = 100*100 # 최소 거리
+#     result = 0
+# 
+#     for jdx in s_j: # 시작 위치 모두 순회하며 찾기
+#         i = 0 # 시작 위치(행) 초기화
+#         j = jdx # 시작 위치(열)
+#         tmp_arr = copy.deepcopy(arr) # 배열 초기화
+#         dist = 0 # 각 시도 마다의 거리
+#         while i < N:
+#             tmp_arr[i][j] = 2 # 왔던 길 표시
+#             dist += 1
+#             for k in [-1, 1]: # 좌우로 갈 수 있는지 탐색
+#                 nj = j + k
+#                 if (0 <= nj < N) and (tmp_arr[i][nj] == 1): # 좌우로 갈 수 있다면
+#                     j = nj # 열 위치 갱신
+#                     break
+#             if j != nj: # 열 위치 갱신이 안된경우(좌우로 못가는 경우) > 아래로 이동
+#                 i += 1
+# 
+#         if dist < min_dist: # 각 시도를 끝낼때마다 최소거리 비교
+#             min_dist = dist
+#             result = jdx
+# 
+#     print(f"#{t} {result}")
+
+# 자기 방으로 돌아가기
+# 겹치는 개수 찾기!! (빈도수)
+# T = int(input())
+# for t in range(1, T+1):
+#     N = int(input())
+#     counts = [0]*200
+# 
+#     # 현재방부터 돌아갈 방까지 지나간 길 표시
+#     for _ in range(N): # N명의 학생
+#         s, e = map(int, input().split())
+#         if e < s:
+#             s, e = e, s
+#         counts[(s-1)//2:(e-1)//2+1] = list(map(lambda x: x+1, counts[(s-1)//2:(e-1)//2+1]))
+# 
+#     # 겹치는 최대 숫자 출력
+#     cnt = 0
+#     for num in counts:
+#         if cnt < num:
+#             cnt = num
+# 
+#     print(f"#{t} {cnt}")
+
+# 파리 퇴치3
+# di = [-1, 1, 0, 0] # 상/하/좌/우
+# dj = [0, 0, -1, 1]
+# di_2 = [-1, 1, -1, 1] # 우상/우하/좌상/좌하
+# dj_2 = [1, 1, -1, -1]
+# T = int(input())
+# for t in range(1, T+1):
+#     N, M = map(int, input().split())
+#     arr = [list(map(int, input().split())) for _ in range(N)]
+#     max_cnt = 0
+# 
+#     for i in range(N):
+#         for j in range(N):
+#             tmp = arr[i][j] # 상하좌우 합 / 초기값은 현재 자리값
+#             tmp_2 = arr[i][j] # 대각선 합 / 초기값은 현재 자리값
+#             for d in range(4):
+#                 # 방향 바꿀때마다 위치 초기화
+#                 ti, tj = i, j
+#                 ti_2, tj_2 = i, j
+#                 for _ in range(M-1): # M번까지 뻗어나갈 수 있음
+#                     ni = ti + di[d]; nj = tj + dj[d] # 상하좌우 탐색
+#                     ni_2 = ti_2 + di_2[d]; nj_2 = tj_2 + dj_2[d] # 대각선 탐색
+#                     if (0 <= ni < N) and (0 <= nj < N):
+#                         tmp += arr[ni][nj]
+#                         ti = ni; tj = nj # 위치 갱신
+#                     if (0 <= ni_2 < N) and (0 <= nj_2 < N):
+#                         tmp_2 += arr[ni_2][nj_2]
+#                         ti_2 = ni_2; tj_2 = nj_2 # 위치 갱신
+#             if max_cnt < tmp:
+#                 max_cnt = tmp
+#             if max_cnt < tmp_2:
+#                 max_cnt = tmp_2
+# 
+#     print(f"#{t} {max_cnt}")
